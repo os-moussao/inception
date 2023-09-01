@@ -1,7 +1,7 @@
 FROM debian:buster
 
-RUN apt update && \
-    apt upgrade && \
+RUN apt update -y && \
+    apt upgrade -y && \
     apt install -y nginx curl ca-certificates openssl
 
 RUN mkdir -p /etc/nginx/ssl &&\
