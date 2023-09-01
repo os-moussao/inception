@@ -10,3 +10,8 @@ RUN mkdir -p /etc/nginx/ssl &&\
      -keyout /etc/nginx/ssl/inception.key \
      -subj "/C=CA/ST=IDF/O=Company, Inc./CN=omoussao.42.fr/UID=omoussao"
 
+COPY ./conf/nginx.conf /etc/nginx/nginx.conf
+
+RUN chmod 755 /var/www/html && chown -R www-data:www-data /var/www/html
+
+CMD [ "nginx", "-g", "daemon off;" ]
