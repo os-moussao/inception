@@ -1,13 +1,21 @@
-FROM debian:buster
+FROM alpine:3.10
 
-RUN apt update -y && \
-    apt upgrade -y && \
-    apt install -y mariadb-server
+RUN apk update && \
+    apk upgrade && \
+    apk add mariadb mariadb-client
 
-COPY conf/mariadb.cnf  /etc/mysql/mariadb.conf.d/50-server.cnf
+RUN addgroup mysql mysql
+
+RUN mkdir /run/mysqld && chown -R mysql:mysql /run/mysqld
+
+RUN mysql_install_db --user=mysql --ldata=/var/lib/mysql
+
+RUN chown -R mysql:mysql /var/lib/mysql
 
 COPY tools/script.sh .
 
 RUN chmod +x script.sh
+
+EXPOSE 3306
 
 ENTRYPOINT ["./script.sh"]
