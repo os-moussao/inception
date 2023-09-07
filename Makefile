@@ -3,8 +3,8 @@ DOCKER_COMPOSE=docker compose -f ./srcs/docker-compose.yml -p inception
 all: build up
 
 build:
-	mkdir -p /home/omoussao/data/wordpress
-	mkdir -p /home/omoussao/data/mariadb
+	mkdir -p /home/omoussaoui/data/wordpress
+	mkdir -p /home/omoussaoui/data/mariadb
 	$(DOCKER_COMPOSE) build
 
 up:
@@ -13,23 +13,24 @@ up:
 down:
 	$(DOCKER_COMPOSE) down -v
 
-wp-logs:
+logs-wp:
 	$(DOCKER_COMPOSE) logs wordpress 
 
-db-logs:
-	$(DOCKER_COMPOSE) logs mariadb --follow
-logs:
+logs-db:
+	$(DOCKER_COMPOSE) logs mariadb
+
+logs-serv:
 	$(DOCKER_COMPOSE) logs nginx
 
 ps:
-	$(DOCKER_COMPOSE) ps
-
-stop:
-	$(DOCKER_COMPOSE) stop
+	docker ps
 
 clean: down
-	rm -rf /home/omoussao/data/wordpress/* 
-	rm -rf /home/omoussao/data/mariadb/* 
+	sudo rm -rf /home/omoussaoui/data/wordpress/* 
+	sudo rm -rf /home/omoussaoui/data/mariadb/* 
+
+fclean: clean
+	docker system prune -af --volumes
 
 re: clean all
 

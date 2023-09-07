@@ -1,21 +1,17 @@
-FROM alpine:3.10
+FROM debian:buster
 
-RUN apk update && \
-    apk upgrade && \
-    apk add mariadb mariadb-client
+RUN apt update && apt upgrade && apt install -y mariadb-server
 
-RUN addgroup mysql mysql
+RUN mkdir -p /var/run/mysqld && \
+    chown -R mysql:mysql /var/run/mysqld && \
+    sed -i 's/bind-address            = 127.0.0.1/bind-address            = 0.0.0.0/g' /etc/mysql/mariadb.conf.d/50-server.cnf
 
-RUN mkdir /run/mysqld && chown -R mysql:mysql /run/mysqld
-
-RUN mysql_install_db --user=mysql --ldata=/var/lib/mysql
-
-RUN chown -R mysql:mysql /var/lib/mysql
-
-COPY tools/script.sh .
-
-RUN chmod +x script.sh
+RUN mysql_install_db --user=mysql --datadir=/var/lib/mysql
 
 EXPOSE 3306
 
-ENTRYPOINT ["./script.sh"]
+COPY ./tools/script.sh  ./create_db.sh
+
+RUN chmod +x ./create_db.sh
+
+ENTRYPOINT ["./create_db.sh"]

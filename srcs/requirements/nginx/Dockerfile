@@ -1,17 +1,18 @@
-FROM debian:buster
+FROM debian:stable
 
-RUN apt update -y && \
-    apt upgrade -y && \
-    apt install -y nginx curl ca-certificates openssl
+RUN apt-get update && apt-get install -y \
+    nginx \
+    wget \
+    libnss3-tools
 
-RUN mkdir -p /etc/nginx/ssl &&\
-     openssl req -x509 -nodes -days 730 \
-     -out /etc/nginx/ssl/inception.crt \
-     -keyout /etc/nginx/ssl/inception.key \
-     -subj "/C=CA/ST=IDF/O=Company, Inc./CN=omoussao.42.fr/UID=omoussao"
+RUN mkdir -p /etc/nginx/ssl && \
+    wget https://github.com/FiloSottile/mkcert/releases/download/v1.4.3/mkcert-v1.4.3-linux-amd64 -O /usr/bin/mkcert && \
+    chmod +x /usr/bin/mkcert && \
+    mkcert -install && \
+    mkcert -cert-file /etc/nginx/ssl/inception_cert.crt -key-file /etc/nginx/ssl/inception_cert.key inception_cert
+
+EXPOSE 443
 
 COPY ./conf/nginx.conf /etc/nginx/nginx.conf
-
-RUN chmod 755 /var/www/html && chown -R www-data:www-data /var/www/html
 
 CMD [ "nginx", "-g", "daemon off;" ]

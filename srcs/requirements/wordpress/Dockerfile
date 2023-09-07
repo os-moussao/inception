@@ -1,25 +1,21 @@
-FROM debian:buster
+FROM debian:bullseye
 
-RUN apt update -y && \
-    apt upgrade -y && \
-    apt install -y wget php7.3 php-fpm php-mysql php-mysqli mariadb-client
+RUN apt update && apt upgrade && apt install -y \
+    php7.4 \
+    php7.4-mysql \
+    php7.4-fpm \
+    curl
 
-# install wordpress
-RUN wget https://fr.wordpress.org/wordpress-6.0-fr_FR.tar.gz -P /var/www
+RUN curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --output wp &&\
+    chmod +x wp &&\
+    mv wp /usr/local/bin/wp
 
-RUN cd /var/www && tar -xzf wordpress-6.0-fr_FR.tar.gz && rm wordpress-6.0-fr_FR.tar.gz
+COPY ./tools/auto_config.sh ./auto_config.sh
 
-RUN chown -R root:root /var/www/wordpress
-
-# install wp cli
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-
-RUN chmod +x wp-cli.phar && mv wp-cli.phar /usr/local/bin/wp
-
-COPY tools/auto_config.sh /
-
-RUN chmod +x /auto_config.sh
+RUN chmod +x ./auto_config.sh && mkdir -p /var/www/html &&\
+    chown -R www-data:www-data /var/www/html && mkdir -p /run/php &&\
+    chown -R www-data:www-data /run/php
 
 EXPOSE 9000
 
-ENTRYPOINT ["/auto_config.sh"]
+ENTRYPOINT ["./auto_config.sh"]

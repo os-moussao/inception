@@ -39,13 +39,13 @@ volumes:
     driver_opts:
       type: volume
       o: bind
-      device: /home/omoussao/data/wordpress
+      device: /home/omoussaoui/data/wordpress
   mariadb-data:
     driver: local
     driver_opts:
       type: volume
       o: bind
-      device: /home/omoussao/data/mariadb
+      device: /home/omoussaoui/data/mariadb
 
 networks:
   inception:
