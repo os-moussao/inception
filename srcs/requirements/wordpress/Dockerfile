@@ -1,9 +1,9 @@
-FROM debian:bullseye
+FROM debian:buster
 
 RUN apt update && apt upgrade && apt install -y \
-    php7.4 \
-    php7.4-mysql \
-    php7.4-fpm \
+    php7.3 \
+    php7.3-mysql \
+    php7.3-fpm \
     curl
 
 RUN curl https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar --output wp &&\

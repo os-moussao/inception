@@ -1,7 +1,7 @@
 #!/bin/sh
 sleep 10
 
-sed -i 's/listen = \/run\/php\/php7.4-fpm.sock/listen = 9000/g' /etc/php/7.4/fpm/pool.d/www.conf
+sed -i 's/listen = \/run\/php\/php7.3-fpm.sock/listen = 9000/g' /etc/php/7.3/fpm/pool.d/www.conf
 
 wp core download --path=/var/www/ --allow-root
 
@@ -16,4 +16,4 @@ wp core install --path=/var/www/ --url=omoussao.42.fr --title=$WP_TITLE --admin_
 
 wp user create --path=/var/www/ $WP_USER $WP_EMAIL --user_pass=$USER_PASS --allow-root
 
-exec php-fpm7.4 -F
+exec php-fpm7.3 -F
