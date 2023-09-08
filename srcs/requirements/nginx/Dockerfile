@@ -1,6 +1,6 @@
-FROM debian:stable
+FROM debian:buster
 
-RUN apt-get update && apt-get install -y \
+RUN apt update && apt upgrade && apt install -y \
     nginx \
     wget \
     libnss3-tools
